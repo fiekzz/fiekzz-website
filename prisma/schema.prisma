@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AppMedia {
+  assetID   String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  mediaName String
+  mediaURL  String
+  mediaKey  String
+  fileType  String
+
+  Skills         Skills? @relation("SkillsLogo")
+  SkillsMarkdown Skills? @relation("SkillsMarkdown")
+  Resume         Resume?
+
+  Education         Education?  @relation("EducationLogo")
+  EducationMarkdown Education?  @relation("EducationMarkdown")
+  Experience        Experience? @relation("ExperienceMarkdown")
+  ExperienceLogo    Experience? @relation("ExperienceLogo")
+  Projects          Projects?   @relation("ProjectLogo")
+  ProjectMarkdown   Projects?   @relation("ProjectMarkdown")
+}
+
+model AppLinks {
+  id    String @id @unique @default(uuid())
+  link  String
+  label String
+
+  experience   Experience? @relation(fields: [experienceId], references: [id])
+  experienceId String?
+  Projects     Projects?  @relation(fields: [projectsId], references: [id])
+  projectsId   String?
+}
+
+model SkillsCategory {
+  id     String   @id @unique @default(uuid())
+  name   String
+  Skills Skills[]
+}
+
+model Skills {
+  id               String          @id @unique @default(uuid())
+  name             String
+  markdown         AppMedia?       @relation("SkillsMarkdown", fields: [markdownId], references: [assetID])
+  markdownId       String?         @unique
+  color            String
+  skillsCategory   SkillsCategory? @relation(fields: [skillsCategoryId], references: [id])
+  skillsCategoryId String?
+
+  logo   AppMedia? @relation("SkillsLogo", fields: [logoId], references: [assetID])
+  logoId String?   @unique
+
+  experiences Experience[] @relation("ExperienceSkills")
+  projects    Projects[]   @relation("ProjectSkills")
+}
+
+model Resume {
+  id         String   @id @unique @default(uuid())
+  createdAt  DateTime @default(now())
+  isActive   Boolean  @default(false)
+  AppMedia   AppMedia @relation(fields: [appMediaId], references: [assetID])
+  appMediaId String   @unique
+}
+
+model Education {
+  id               String    @id @unique @default(uuid())
+  degree           String
+  cgpa             String?
+  shortDescription String
+  location         String
+  organization     String
+  periodFrom       DateTime
+  periodTo         DateTime?
+  subjects         String[]
+
+  logo   AppMedia? @relation("EducationLogo", fields: [logoId], references: [assetID])
+  logoId String?   @unique
+
+  markdown   AppMedia? @relation("EducationMarkdown", fields: [markdownId], references: [assetID])
+  markdownId String?   @unique
+}
+
+model Experience {
+  id               String    @id @unique @default(uuid())
+  company          String
+  contract         String // full-time, part-time, contract, self-employed, freelance, internship, apprenticeship, seasonal
+  type             String // Software development
+  location         String
+  periodFrom       DateTime
+  periodTo         DateTime?
+  shortDescription String
+
+  name  String
+  color String
+
+  skills Skills[] @relation("ExperienceSkills")
+
+  markdown   AppMedia? @relation("ExperienceMarkdown", fields: [markdownId], references: [assetID])
+  markdownId String?   @unique
+
+  logo   AppMedia? @relation("ExperienceLogo", fields: [logoId], references: [assetID])
+  logoId String?   @unique
+
+  links AppLinks[]
+}
+
+model Projects {
+  id               String     @id @unique @default(uuid())
+  color            String?
+  shortDescription String?
+  name             String?
+  periodFrom       DateTime?
+  periodTo         DateTime?
+  links            AppLinks[]
+  skills           Skills[]   @relation("ProjectSkills")
+  type             String // web, mobile, desktop, library, cli, api, other
+  markdown         AppMedia?  @relation("ProjectMarkdown", fields: [markdownId], references: [assetID])
+  markdownId       String?    @unique
+
+  logo   AppMedia? @relation("ProjectLogo", fields: [logoId], references: [assetID])
+  logoId String?   @unique
+  createdAt DateTime?  @default(now())
+  updatedAt DateTime?  @updatedAt
+}
