@@ -1,26 +1,36 @@
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client";
+// import { withAccelerate } from "@prisma/extension-accelerate"
+// import { env } from "$env/dynamic/private";
 
-class Singleton {
-    private static instance: Singleton;
+// class Singleton {
+//     private static instance: Singleton;
 
-    private prisma: PrismaClient;
+//     private prisma: PrismaClient;
 
-    private constructor() {
-        this.prisma = new PrismaClient();
-    }
+//     private constructor() {
+//         // Initialize Prisma Client for edge runtime
 
-    public static getInstance(): Singleton {
-        if (!Singleton.instance) {
-            Singleton.instance = new Singleton();
-        }
+//         // let test = new PrismaClient().$extends(withAccelerate());
+//         // Cast the extended client back to PrismaClient to satisfy the declared type
+//         // this.prisma = test as unknown as PrismaClient;
 
-        return Singleton.instance;
-    }
+//         this.prisma = new PrismaClient({
+//             datasourceUrl: env.DATABASE_URL,
+//         }).$extends(withAccelerate())
+//     }
 
-    public getPrisma() {
-        return this.prisma;
-    }
+//     public static getInstance(): Singleton {
+//         if (!Singleton.instance) {
+//             Singleton.instance = new Singleton();
+//         }
 
-}
+//         return Singleton.instance;
+//     }
 
-export default Singleton;
+//     public getPrisma() {
+//         return this.prisma;
+//     }
+
+// }
+
+// export default Singleton;
