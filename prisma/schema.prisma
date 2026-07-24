@@ -1,7 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
   engineType = "client"
-  // previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -37,7 +36,7 @@ model AppLinks {
 
   experience   Experience? @relation(fields: [experienceId], references: [id])
   experienceId String?
-  Projects     Projects?  @relation(fields: [projectsId], references: [id])
+  Projects     Projects?   @relation(fields: [projectsId], references: [id])
   projectsId   String?
 }
 
@@ -126,8 +125,8 @@ model Projects {
   markdown         AppMedia?  @relation("ProjectMarkdown", fields: [markdownId], references: [assetID])
   markdownId       String?    @unique
 
-  logo   AppMedia? @relation("ProjectLogo", fields: [logoId], references: [assetID])
-  logoId String?   @unique
-  createdAt DateTime?  @default(now())
-  updatedAt DateTime?  @updatedAt
+  logo      AppMedia? @relation("ProjectLogo", fields: [logoId], references: [assetID])
+  logoId    String?   @unique
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
