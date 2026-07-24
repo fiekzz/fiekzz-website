@@ -8,6 +8,10 @@
 	let { children } = $props();
 </script>
 
+<svelte:head>
+	<meta name="description" content="Fiekzz's Portfolio Website" />
+</svelte:head>
+
 <ModeWatcher />
 <div class="flex min-h-screen w-full flex-col overflow-x-hidden">
 	<NavBar />
