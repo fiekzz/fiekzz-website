@@ -3,18 +3,14 @@
 	import EmptyResult from '$lib/components/common/empty-result/empty-result.svelte';
 	import FancyBanner from '$lib/components/common/fancy-banner/fancy-banner.svelte';
 	import EmptyMarkdown from '$lib/components/common/markdown/empty-markdown.svelte';
-	import Markdown from '$lib/components/common/markdown/markdown.svelte';
-	import ScreenshotCard from '$lib/components/common/screenshot/screenshot-card.svelte';
+	import OutlineDocument from '$lib/components/OutlineDocument.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import H1 from '$lib/components/ui/typography/h1.svelte';
 	import Muted from '$lib/components/ui/typography/muted.svelte';
 	import Assets from '$lib/data/assets';
-	import type { Project } from '$lib/data/types';
 	import { computeExactDuration, getMonthAndYear, href } from '$lib/utils';
-	import { mode } from 'mode-watcher';
 
-	// let { data }: { data: { item?: Project } } = $props();
 
 	let { data } = $props();
 
@@ -22,13 +18,6 @@
 	let banner = $derived(
 		data.project?.logo?.mediaURL ?? Assets.Unknown.dark
 	);
-
-	// let duration = $derived(
-	// 	`${getMonthAndYear(data.item?.period.from)} - ${getMonthAndYear(data.item?.period.to)} · ${computeExactDuration(
-	// 		data.item?.period.from ?? new Date(),
-	// 		data.item?.period.to
-	// 	)}`
-	// );
 
 	let duration = $derived(
 		`${getMonthAndYear(data.project?.periodFrom ?? new Date())} - ${getMonthAndYear(data.project?.periodTo ?? new Date())} · ${computeExactDuration(
@@ -70,8 +59,8 @@
 			</div>
 		</FancyBanner>
 		<Separator />
-		{#if data.project.markdown}
-			<Markdown content={data.markdownContent ?? ''} />
+		{#if data.project.outlineDocUrl}
+			<OutlineDocument title={data.project.name ?? 'Untitled Project'} html={data.outlineHtml ?? Promise.resolve('')} />
 		{:else}
 			<EmptyMarkdown />
 		{/if}

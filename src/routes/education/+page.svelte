@@ -24,7 +24,7 @@
 				subjects: it.subjects,
 				name: it.shortDescription,
 				shortDescription: it.shortDescription,
-				description: it.markdown?.mediaURL || '',
+				description: it.shortDescription || '',
 				logo: it.logo?.mediaURL || '',
 				cgpa: it.cgpa || ''
 			}

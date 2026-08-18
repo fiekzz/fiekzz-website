@@ -59,7 +59,7 @@
 				type: it.type,
 				logo: it.logo?.mediaURL || '',
 				name: it.name ?? '',
-				description: it.markdown?.mediaURL ?? '',
+				description: it.shortDescription ?? '',
 				shortDescription: it.shortDescription ?? '',
 				contract: contract
 			};

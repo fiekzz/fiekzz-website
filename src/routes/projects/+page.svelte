@@ -5,10 +5,7 @@
 	import Icon from '$lib/components/ui/icon/icon.svelte';
 	import Toggle from '$lib/components/ui/toggle/toggle.svelte';
 	import type { HexColor } from '$lib/data/colors.js';
-	// import ProjectsData from '$lib/data/projects';
-	// import SkillsData from '$lib/data/skills';
 	import type { Project, Skill, SkillCategory } from '$lib/data/types';
-	import { DateTime } from 'luxon';
 
 	interface SkillFilter extends Skill {
 		isSelected?: boolean;
@@ -50,7 +47,7 @@
 			type: it.type,
 			slug: it.id,
 			name: it.name ?? '',
-			description: it.markdown?.mediaURL || '',
+			description: it.shortDescription ?? '',
 			shortDescription: it.shortDescription ?? '',
 			logo: it.logo?.mediaURL || ''
 		}

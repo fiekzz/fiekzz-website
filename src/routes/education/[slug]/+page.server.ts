@@ -1,56 +1,42 @@
-// import EducationData from '$lib/data/education';
-
-import { MarkdownContent } from '$lib/data/md/markdown-content';
+import { extractOutlineDocId, fetchOutlineDocumentHtml } from '$lib/server/outline';
+import { APP_USER_ID, outlineConfig } from '$lib/server/outline-env';
 import { prisma } from '$lib/utils/prisma-util';
-
-// export function load({ params }: { params: Record<string, string> }) {
-// 	if (params.slug) {
-// 		const item = EducationData.items.find((item) => {
-// 			return item.slug === params.slug;
-// 		});
-
-// 		return { item };
-// 	}
-// }
 
 export async function load({ params }) {
 
+	if (!params.slug) {
+		return {
+			education: null,
+			outlineHtml: null
+		}
+	}
+
 	try {
-		
-		const educationId = params.slug;
 
-		if (educationId) {
-			const education = await prisma.education.findUnique({
-				where: {
-					id: educationId
-				},
-				include: {
-					markdown: true,
-					logo: true,
-				}
-			})
-
-			const url = education?.markdown?.mediaURL
-
-			if (url) {
-				const markdownContent = await new MarkdownContent(url).getContent();
-				return {
-					education,
-					markdownContent: markdownContent ?? null
-				}
+		const education = await prisma.education.findFirst({
+			where: {
+				id: params.slug,
+				userId: APP_USER_ID
+			},
+			include: {
+				logo: true,
 			}
+		})
 
-			return {
-				education,
-				markdownContent: null
-			}
+		const outlineHtml = education?.outlineDocUrl
+			? fetchOutlineDocumentHtml(extractOutlineDocId(education.outlineDocUrl), outlineConfig)
+			: null;
+
+		return {
+			education,
+			outlineHtml
 		}
 
 	} catch (error) {
-		
+
 		return {
 			education: null,
-			markdownContent: null
+			outlineHtml: null
 		}
 	}
 

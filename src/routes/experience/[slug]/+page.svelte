@@ -3,16 +3,13 @@
 	import EmptyResult from '$lib/components/common/empty-result/empty-result.svelte';
 	import FancyBanner from '$lib/components/common/fancy-banner/fancy-banner.svelte';
 	import EmptyMarkdown from '$lib/components/common/markdown/empty-markdown.svelte';
-	import Markdown from '$lib/components/common/markdown/markdown.svelte';
-	import ScreenshotCard from '$lib/components/common/screenshot/screenshot-card.svelte';
+	import OutlineDocument from '$lib/components/OutlineDocument.svelte';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import H1 from '$lib/components/ui/typography/h1.svelte';
 	import Muted from '$lib/components/ui/typography/muted.svelte';
 	import Assets from '$lib/data/assets';
-	import type { Experience } from '$lib/data/types';
 	import { computeExactDuration, getMonthAndYear, href } from '$lib/utils';
-	import { mode } from 'mode-watcher';
 
 	let { data } = $props();
 
@@ -61,8 +58,8 @@
 			</div>
 		</FancyBanner>
 		<Separator />
-		{#if data.experience.markdown}
-			<Markdown content={data.markdownContent ?? ''} />
+		{#if data.experience.outlineDocUrl}
+			<OutlineDocument title={data.experience.name} html={data.outlineHtml ?? Promise.resolve('')} />
 		{:else}
 			<EmptyMarkdown />
 		{/if}

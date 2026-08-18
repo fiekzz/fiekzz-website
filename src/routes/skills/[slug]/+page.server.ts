@@ -1,6 +1,7 @@
 // import SkillsData from '$lib/data/skills';
 
 import { MarkdownContent } from '$lib/data/md/markdown-content.js';
+import { APP_USER_ID } from '$lib/server/outline-env';
 import { prisma } from '$lib/utils/prisma-util.js';
 
 // export function load({ params }: { params: Record<string, string> }) {
@@ -21,9 +22,10 @@ export async function load({ params }) {
 
 		if (skillId) {
 
-			const skill = await prisma.skills.findUnique({
+			const skill = await prisma.skills.findFirst({
 				where: {
-					id: skillId
+					id: skillId,
+					userId: APP_USER_ID
 				},
 				include: {
 					markdown: true,
@@ -33,6 +35,9 @@ export async function load({ params }) {
 			})
 
 			const experiences = await prisma.experience.findMany({
+				where: {
+					userId: APP_USER_ID
+				},
 				include: {
 					skills: {
 						include: {
@@ -44,6 +49,9 @@ export async function load({ params }) {
 			})
 
 			const projects = await prisma.projects.findMany({
+				where: {
+					userId: APP_USER_ID
+				},
 				include: {
 					skills: {
 						include: {

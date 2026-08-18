@@ -1,31 +1,21 @@
-import { MarkdownContent } from '$lib/data/md/markdown-content.js';
-import ProjectsData from '$lib/data/projects';
+import { extractOutlineDocId, fetchOutlineDocumentHtml } from '$lib/server/outline';
+import { APP_USER_ID, outlineConfig } from '$lib/server/outline-env';
 import { prisma } from '$lib/utils/prisma-util.js';
-
-// export function load({ params }: { params: Record<string, string> }) {
-// 	if (params.slug) {
-// 		const item = ProjectsData.items.find((item) => {
-// 			return item.slug === params.slug;
-// 		});
-
-// 		return { item };
-// 	}
-// }
 
 export async function load({ params }) {
 
 	try {
-		
+
 		const projectId = params.slug;
 
 		if (projectId) {
 
-			const project = await prisma.projects.findUnique({
+			const project = await prisma.projects.findFirst({
 				where: {
-					id: projectId
+					id: projectId,
+					userId: APP_USER_ID
 				},
 				include: {
-					markdown: true,
 					logo: true,
 					skills: {
 						include: {
@@ -36,32 +26,26 @@ export async function load({ params }) {
 				}
 			})
 
-			const url = project?.markdown?.mediaURL
-
-			if (url) {
-				const markdownContent = await new MarkdownContent(url).getContent();
-				return {
-					project,
-					markdownContent: markdownContent ?? null
-				}
-			}
+			const outlineHtml = project?.outlineDocUrl
+				? fetchOutlineDocumentHtml(extractOutlineDocId(project.outlineDocUrl), outlineConfig)
+				: null;
 
 			return {
 				project,
-				markdownContent: null
+				outlineHtml
 			}
 		}
 
 		return {
 			project: null,
-			markdownContent: null
+			outlineHtml: null
 		}
 
 	} catch (error) {
-		
+
 		return {
 			project: null,
-			markdownContent: null
+			outlineHtml: null
 		}
 	}
 

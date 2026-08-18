@@ -1,5 +1,5 @@
-import ExperienceData from '$lib/data/experience';
-import { MarkdownContent } from '$lib/data/md/markdown-content.js';
+import { extractOutlineDocId, fetchOutlineDocumentHtml } from '$lib/server/outline';
+import { APP_USER_ID, outlineConfig } from '$lib/server/outline-env';
 import { prisma } from '$lib/utils/prisma-util.js';
 
 export async function load({ params }) {
@@ -7,13 +7,13 @@ export async function load({ params }) {
 	if (params.slug) {
 
 		try {
-			
-			const experience = await prisma.experience.findUnique({
+
+			const experience = await prisma.experience.findFirst({
 				where: {
-					id: params.slug
+					id: params.slug,
+					userId: APP_USER_ID
 				},
 				include: {
-					markdown: true,
 					logo: true,
 					skills: {
 						include: {
@@ -24,32 +24,27 @@ export async function load({ params }) {
 				}
 			})
 
-			const url = experience?.markdown?.mediaURL
-
-			if (url) {
-				const markdownContent = await new MarkdownContent(url).getContent();
-				return {
-					experience,
-					markdownContent: markdownContent ?? null
-				}
-			}
+			const outlineHtml = experience?.outlineDocUrl
+				? fetchOutlineDocumentHtml(extractOutlineDocId(experience.outlineDocUrl), outlineConfig)
+				: null;
 
 			return {
 				experience,
-				markdownContent: null
+				outlineHtml
 			}
 
 		} catch (error) {
-			
+
 			return {
 				experience: null,
-				markdownContent: null
+				outlineHtml: null
 			}
 
 		}
 	}
 
 	return {
-		experience: null
+		experience: null,
+		outlineHtml: null
 	}
 }

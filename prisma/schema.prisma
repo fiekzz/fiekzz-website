@@ -9,65 +9,70 @@ datasource db {
 }
 
 model AppMedia {
-  assetID   String   @id @unique @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  mediaName String
-  mediaURL  String
-  mediaKey  String
-  fileType  String
-
-  Skills         Skills? @relation("SkillsLogo")
-  SkillsMarkdown Skills? @relation("SkillsMarkdown")
+  assetID        String         @id @unique @default(uuid())
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  mediaName      String
+  mediaURL       String
+  mediaKey       String
+  fileType       String
+  userId         String
+  User           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Education      Education?     @relation("EducationLogo")
+  ExperienceLogo Experience?    @relation("ExperienceLogo")
+  ProfileAssets  ProfileAssets?
+  Projects       Projects?      @relation("ProjectLogo")
   Resume         Resume?
-
-  Education         Education?  @relation("EducationLogo")
-  EducationMarkdown Education?  @relation("EducationMarkdown")
-  Experience        Experience? @relation("ExperienceMarkdown")
-  ExperienceLogo    Experience? @relation("ExperienceLogo")
-  Projects          Projects?   @relation("ProjectLogo")
-  ProjectMarkdown   Projects?   @relation("ProjectMarkdown")
+  SiteSettings   SiteSettings?
+  Skills         Skills?        @relation("SkillsLogo")
+  SkillsMarkdown Skills?        @relation("SkillsMarkdown")
+  SocialLinks    SocialLinks?
 }
 
 model AppLinks {
-  id    String @id @unique @default(uuid())
-  link  String
-  label String
-
-  experience   Experience? @relation(fields: [experienceId], references: [id])
+  id           String      @id @unique @default(uuid())
+  link         String
+  label        String
   experienceId String?
-  Projects     Projects?   @relation(fields: [projectsId], references: [id])
   projectsId   String?
+  userId       String
+  experience   Experience? @relation(fields: [experienceId], references: [id])
+  Projects     Projects?   @relation(fields: [projectsId], references: [id])
+  User         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model SkillsCategory {
   id     String   @id @unique @default(uuid())
   name   String
+  userId String
   Skills Skills[]
+  User   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Skills {
   id               String          @id @unique @default(uuid())
   name             String
-  markdown         AppMedia?       @relation("SkillsMarkdown", fields: [markdownId], references: [assetID])
   markdownId       String?         @unique
   color            String
-  skillsCategory   SkillsCategory? @relation(fields: [skillsCategoryId], references: [id])
   skillsCategoryId String?
-
-  logo   AppMedia? @relation("SkillsLogo", fields: [logoId], references: [assetID])
-  logoId String?   @unique
-
-  experiences Experience[] @relation("ExperienceSkills")
-  projects    Projects[]   @relation("ProjectSkills")
+  logoId           String?         @unique
+  userId           String
+  logo             AppMedia?       @relation("SkillsLogo", fields: [logoId], references: [assetID])
+  markdown         AppMedia?       @relation("SkillsMarkdown", fields: [markdownId], references: [assetID])
+  skillsCategory   SkillsCategory? @relation(fields: [skillsCategoryId], references: [id])
+  User             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  experiences      Experience[]    @relation("ExperienceSkills")
+  projects         Projects[]      @relation("ProjectSkills")
 }
 
 model Resume {
   id         String   @id @unique @default(uuid())
   createdAt  DateTime @default(now())
   isActive   Boolean  @default(false)
-  AppMedia   AppMedia @relation(fields: [appMediaId], references: [assetID])
   appMediaId String   @unique
+  userId     String
+  AppMedia   AppMedia @relation(fields: [appMediaId], references: [assetID])
+  User       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Education {
@@ -80,36 +85,32 @@ model Education {
   periodFrom       DateTime
   periodTo         DateTime?
   subjects         String[]
-
-  logo   AppMedia? @relation("EducationLogo", fields: [logoId], references: [assetID])
-  logoId String?   @unique
-
-  markdown   AppMedia? @relation("EducationMarkdown", fields: [markdownId], references: [assetID])
-  markdownId String?   @unique
+  logoId           String?   @unique
+  userId           String
+  outlineDocUrl    String?
+  color            String?
+  logo             AppMedia? @relation("EducationLogo", fields: [logoId], references: [assetID])
+  User             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Experience {
-  id               String    @id @unique @default(uuid())
+  id               String     @id @unique @default(uuid())
   company          String
-  contract         String // full-time, part-time, contract, self-employed, freelance, internship, apprenticeship, seasonal
-  type             String // Software development
+  contract         String
+  type             String
   location         String
   periodFrom       DateTime
   periodTo         DateTime?
   shortDescription String
-
-  name  String
-  color String
-
-  skills Skills[] @relation("ExperienceSkills")
-
-  markdown   AppMedia? @relation("ExperienceMarkdown", fields: [markdownId], references: [assetID])
-  markdownId String?   @unique
-
-  logo   AppMedia? @relation("ExperienceLogo", fields: [logoId], references: [assetID])
-  logoId String?   @unique
-
-  links AppLinks[]
+  name             String
+  color            String
+  logoId           String?    @unique
+  userId           String
+  outlineDocUrl    String?
+  links            AppLinks[]
+  logo             AppMedia?  @relation("ExperienceLogo", fields: [logoId], references: [assetID])
+  User             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skills           Skills[]   @relation("ExperienceSkills")
 }
 
 model Projects {
@@ -119,14 +120,82 @@ model Projects {
   name             String?
   periodFrom       DateTime?
   periodTo         DateTime?
+  type             String
+  logoId           String?    @unique
+  createdAt        DateTime?  @default(now())
+  updatedAt        DateTime?  @updatedAt
+  userId           String
+  outlineDocUrl    String?
   links            AppLinks[]
+  logo             AppMedia?  @relation("ProjectLogo", fields: [logoId], references: [assetID])
+  User             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   skills           Skills[]   @relation("ProjectSkills")
-  type             String // web, mobile, desktop, library, cli, api, other
-  markdown         AppMedia?  @relation("ProjectMarkdown", fields: [markdownId], references: [assetID])
-  markdownId       String?    @unique
+}
 
-  logo      AppMedia? @relation("ProjectLogo", fields: [logoId], references: [assetID])
-  logoId    String?   @unique
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
+model ProfileAssets {
+  id             String   @id @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime
+  profileAssetID String   @unique
+  title          String
+  userId         String
+  AppMedia       AppMedia @relation(fields: [profileAssetID], references: [assetID])
+  User           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SiteSettings {
+  id              String    @id
+  firstName       String
+  lastName        String
+  suffix          String
+  brandName       String
+  heroDescription String
+  email           String
+  updatedAt       DateTime
+  userImageId     String?   @unique
+  userId          String    @unique
+  User            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  AppMedia        AppMedia? @relation(fields: [userImageId], references: [assetID])
+}
+
+model SocialLinks {
+  id       String    @id
+  title    String
+  link     String
+  imageId  String?   @unique
+  userId   String
+  enabled  Boolean   @default(true)
+  icon     String?
+  platform String?
+  AppMedia AppMedia? @relation(fields: [imageId], references: [assetID])
+  User     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, platform])
+}
+
+model User {
+  id             String           @id
+  email          String           @unique
+  passwordHash   String
+  createdAt      DateTime         @default(now())
+  username       String           @unique
+  AppLinks       AppLinks[]
+  AppMedia       AppMedia[]
+  Education      Education[]
+  Experience     Experience[]
+  ProfileAssets  ProfileAssets[]
+  Projects       Projects[]
+  Resume         Resume[]
+  Session        Session[]
+  SiteSettings   SiteSettings?
+  Skills         Skills[]
+  SkillsCategory SkillsCategory[]
+  SocialLinks    SocialLinks[]
 }
