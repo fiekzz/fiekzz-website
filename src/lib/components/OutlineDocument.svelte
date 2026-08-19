@@ -40,6 +40,19 @@
 			pre.appendChild(btn);
 		});
 	}
+
+	// Wide tables otherwise force the whole page to overflow on narrow
+	// viewports — the root layout clips that overflow rather than scrolling
+	// it, so a wide table would just get silently cut off on mobile. Give
+	// each table its own horizontal scroll instead.
+	function wrapTables(node: HTMLElement) {
+		node.querySelectorAll('table').forEach((table) => {
+			const wrapper = document.createElement('div');
+			wrapper.className = 'table-scroll';
+			table.parentElement?.insertBefore(wrapper, table);
+			wrapper.appendChild(table);
+		});
+	}
 </script>
 
 <article class="outline-content">
@@ -47,7 +60,7 @@
 	{#await html}
 		<p class="loading">Loading document…</p>
 	{:then resolvedHtml}
-		<div use:addCopyButtons>
+		<div use:addCopyButtons use:wrapTables>
 			{@html resolvedHtml}
 		</div>
 	{:catch e}
@@ -61,10 +74,18 @@
        component needs no dark-mode overrides of its own. */
     .outline-content {
         /*max-width: 760px;*/
+        /* Flex items with auto margins size via shrink-to-fit (max-content)
+           instead of stretching to fill the row - without an explicit width,
+           this always sized itself to its widest content (a table, a long
+           unbroken URL) rather than the viewport. Rarely visible on a wide
+           desktop viewport, but exactly what broke this on mobile. */
+        width: 100%;
+        min-width: 0;
         margin: 0 auto;
         padding: 3rem 1.5rem;
         color: hsl(var(--foreground));
         background: transparent;
+        overflow-wrap: anywhere;
     }
     .outline-content :global(h1) { font-size: 2rem; font-weight: 700; margin: 0 0 1.5rem; line-height: 1.25; }
     .outline-content :global(article > h1:first-child) { display: none; }
@@ -113,7 +134,9 @@
     }
     .outline-content :global(mark) { background: hsl(var(--accent)); color: hsl(var(--accent-foreground)); padding: 0 0.15em; border-radius: 3px; }
     .outline-content .loading { color: hsl(var(--muted-foreground)); font-style: italic; }
-    .outline-content :global(table) { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+    .outline-content :global(.table-scroll) { overflow-x: auto; margin: 1rem 0; }
+    .outline-content :global(.table-scroll table) { margin: 0; }
+    .outline-content :global(table) { border-collapse: collapse; width: 100%; }
     .outline-content :global(th), .outline-content :global(td) {
         border: 1px solid hsl(var(--border)); padding: 0.5rem;
     }
