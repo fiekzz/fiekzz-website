@@ -18,7 +18,7 @@ pipeline {
 		timestamps()
 		disableConcurrentBuilds()
 		timeout(time: 30, unit: 'MINUTES')
-		buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '5'))
+		buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
 	}
 
 	triggers {
@@ -217,8 +217,8 @@ pipeline {
 		stage('Sync secrets to Cloudflare') {
 			when {
 				anyOf {
-					branch 'main'
-					expression { env.BRANCH_NAME == null && (env.GIT_BRANCH ?: '').endsWith('main') }
+					branch 'hidayahzai'
+					expression { env.BRANCH_NAME == null && (env.GIT_BRANCH ?: '').endsWith('hidayahzai') }
 				}
 			}
 			steps {
@@ -258,8 +258,8 @@ pipeline {
 		stage('Deploy to Cloudflare Workers') {
 			when {
 				anyOf {
-					branch 'main'
-					expression { env.BRANCH_NAME == null && (env.GIT_BRANCH ?: '').endsWith('main') }
+					branch 'hidayahzai'
+					expression { env.BRANCH_NAME == null && (env.GIT_BRANCH ?: '').endsWith('hidayahzai') }
 				}
 			}
 			steps {

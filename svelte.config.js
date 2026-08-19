@@ -1,5 +1,5 @@
 // import adapter from '@sveltejs/adapter-static';
-import adapter from '@sveltejs/adapter-cloudflare-workers'
+import adapter from '@sveltejs/adapter-cloudflare'
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 const base = '/slick-portfolio-svelte-5';

@@ -6,12 +6,18 @@ compatibility_flags = ["nodejs_compat"]
 
 # Static assets configuration
 [assets]
-directory = ".svelte-kit/cloudflare"
+directory = "./.cloudflare/public"
 binding = "ASSETS"
 
 # Build configuration
 [build]
 command = "npx prisma generate --no-engine && vite build"
+
+# Secrets (R2_TOKEN_VALUE, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, S3_REGION,
+# S3_ENDPOINT, S3_BUCKET, DATABASE_URL, ADMIN_EMAIL_1/2, ADMIN_PASSWORD_1/2,
+# AUTHENTIK_BASE_URL, AUTHENTIK_CLIENT_ID, AUTHENTIK_CLIENT_SECRET, AUTHENTIK_REDIRECT_URI)
+# are set via `wrangler secret put <NAME>` and are not stored in this file.
+# For local `wrangler dev`, put them in `.dev.vars` (gitignored) instead.
 
 [observability]
 [observability.logs]
