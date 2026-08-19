@@ -5,7 +5,6 @@
 // seed-script-only (never needed by the Worker at all).
 const RUNTIME_KEYS = [
 	'DATABASE_URL',
-	'AUTHENTIK_BASE_URL',
 	'USERID',
 	'OUTLINE_API_URL',
 	'OUTLINE_API_TOKEN'
