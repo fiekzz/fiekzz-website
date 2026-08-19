@@ -18,7 +18,7 @@ pipeline {
 		timestamps()
 		disableConcurrentBuilds()
 		timeout(time: 30, unit: 'MINUTES')
-		buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '5'))
+		buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
 	}
 
 	triggers {
