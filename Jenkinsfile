@@ -217,8 +217,8 @@ pipeline {
 		stage('Sync secrets to Cloudflare') {
 			when {
 				anyOf {
-					branch 'main'
-					expression { env.BRANCH_NAME == null && (env.GIT_BRANCH ?: '').endsWith('main') }
+					branch 'fiekzz'
+					expression { env.BRANCH_NAME == null && (env.GIT_BRANCH ?: '').endsWith('fiekzz') }
 				}
 			}
 			steps {
@@ -258,8 +258,8 @@ pipeline {
 		stage('Deploy to Cloudflare Workers') {
 			when {
 				anyOf {
-					branch 'main'
-					expression { env.BRANCH_NAME == null && (env.GIT_BRANCH ?: '').endsWith('main') }
+					branch 'fiekzz'
+					expression { env.BRANCH_NAME == null && (env.GIT_BRANCH ?: '').endsWith('fiekzz') }
 				}
 			}
 			steps {
