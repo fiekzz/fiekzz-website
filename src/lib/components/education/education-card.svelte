@@ -24,15 +24,17 @@
 	let period = $derived(`${from} - ${to}`);
 
 	let location = `${it.organization}, ${it.location}`;
+
+	let logoSrc = it.logo as string;
 </script>
 
-<FancyCard href={href(`/education/${it.slug}`)}>
+<FancyCard color={it.color} href={href(`/education/${it.slug}`)}>
 	<CardContent class="flex flex-col gap-8 sm:flex-row">
 		<Avatar>
 			<AvatarFallback>
 				<img src={$mode === 'dark' ? Assets.Unknown.dark : Assets.Unknown.light} alt={it.name} />
 			</AvatarFallback>
-			<AvatarImage src={it.logo as string} />
+			<AvatarImage src={logoSrc} />
 		</Avatar>
 		<div class="flex flex-col gap-4">
 			<CardTitle>{it.degree}</CardTitle>
