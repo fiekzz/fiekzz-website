@@ -5,7 +5,7 @@
 	import '../markdown.css';
 	import { ModeWatcher } from 'mode-watcher';
 
-	let { children } = $props();
+	let { children, data } = $props();
 </script>
 
 <svelte:head>
@@ -14,6 +14,6 @@
 
 <ModeWatcher />
 <div class="flex min-h-screen w-full flex-col overflow-x-hidden">
-	<NavBar />
+	<NavBar siteSettings={data.siteSettings} />
 	<div class="mt-[50px] flex flex-1 flex-col">{@render children()}</div>
 </div>

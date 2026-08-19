@@ -3,6 +3,7 @@
 	import SearchPage from '$lib/components/common/search-page/search-page.svelte';
 	import EducationCard from '$lib/components/education/education-card.svelte';
 	import Icon from '$lib/components/ui/icon/icon.svelte';
+	import type { HexColor } from '$lib/data/colors.js';
 	import EducationData from '$lib/data/education';
 
 	let search = $state('');
@@ -26,7 +27,8 @@
 				shortDescription: it.shortDescription,
 				description: it.shortDescription || '',
 				logo: it.logo?.mediaURL || '',
-				cgpa: it.cgpa || ''
+				cgpa: it.cgpa || '',
+				color: `#${it.color || '000000'}` as HexColor
 			}
 		})
 	}

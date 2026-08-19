@@ -29,7 +29,7 @@ pipeline {
 	environment {
 		// --- Infisical ------------------------------------------------------
 		INFISICAL_API_URL     = 'https://infisical.fiekzz.com/api'
-		INFISICAL_PROJECT_ID  = '29a01e2d-c990-4153-9884-14fb0f778813'
+		INFISICAL_PROJECT_ID  = '6871ba61-d977-404a-9985-bb8d19d0fe92'
 		INFISICAL_ENV_SLUG    = 'prod'
 		INFISICAL_SECRET_PATH = '/'
 
@@ -217,8 +217,8 @@ pipeline {
 		stage('Sync secrets to Cloudflare') {
 			when {
 				anyOf {
-					branch 'fiekzz'
-					expression { env.BRANCH_NAME == null && (env.GIT_BRANCH ?: '').endsWith('fiekzz') }
+					branch 'hidayahzai'
+					expression { env.BRANCH_NAME == null && (env.GIT_BRANCH ?: '').endsWith('hidayahzai') }
 				}
 			}
 			steps {
@@ -258,8 +258,8 @@ pipeline {
 		stage('Deploy to Cloudflare Workers') {
 			when {
 				anyOf {
-					branch 'fiekzz'
-					expression { env.BRANCH_NAME == null && (env.GIT_BRANCH ?: '').endsWith('fiekzz') }
+					branch 'hidayahzai'
+					expression { env.BRANCH_NAME == null && (env.GIT_BRANCH ?: '').endsWith('hidayahzai') }
 				}
 			}
 			steps {

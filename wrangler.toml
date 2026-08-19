@@ -1,6 +1,5 @@
-name = "fiekzz-website"
-account_id = "5b20cc60d2910c1b06c625a42979f8a0"
-main = "./.cloudflare/worker.js"
+name = "hidayah-website"
+main = ".svelte-kit/cloudflare/_worker.js"
 compatibility_date = "2024-10-18"
 workers_dev = true
 compatibility_flags = ["nodejs_compat"]

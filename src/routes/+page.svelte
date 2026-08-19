@@ -11,15 +11,37 @@
 	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip';
 	import H1 from '$lib/components/ui/typography/h1.svelte';
 	import Muted from '$lib/components/ui/typography/muted.svelte';
-	import HomeData from '$lib/data/home';
+	import Assets from '$lib/data/assets';
 	import { href } from '$lib/utils';
-	import { mode } from 'mode-watcher';
 	import { type CarouselAPI } from '$lib/components/ui/carousel/context.js';
 	import { onMount } from 'svelte';
 
 	let api: CarouselAPI | undefined = $state(undefined);
 
 	let { data } = $props()
+
+	let heroName = $derived(
+		data.siteSettings ? `${data.siteSettings.firstName} ${data.siteSettings.lastName},` : ''
+	);
+	let heroImage = $derived(data.siteSettings?.AppMedia?.mediaURL ?? Assets.Unknown.light);
+	let heroLinks = $derived([
+		...data.socialLinks.map((link) => ({
+			label: link.title,
+			href: link.link,
+			icon: link.icon ? (link.icon as `i-carbon-${string}`) : undefined,
+			image: link.AppMedia?.mediaURL
+		})),
+		...(data.siteSettings?.email
+			? [
+					{
+						label: 'Email',
+						href: `mailto:${data.siteSettings.email}`,
+						icon: 'i-carbon-at' as const,
+						image: undefined
+					}
+				]
+			: [])
+	]);
 
 	onMount(() => {
 		setInterval(() => {
@@ -30,7 +52,7 @@
 	});
 </script>
 
-<Title title={HomeData.title} />
+<Title title={data.siteSettings?.brandName ?? 'Home'} suffix={data.siteSettings?.suffix} />
 <ResponsiveContainer className="flex flex-col justify-center flex-1">
 	<div
 		class="flex flex-1 flex-col items-center justify-center gap-8 px-14 md:flex-row md:justify-between"
@@ -38,18 +60,22 @@
 		<div
 			class="flex flex-col items-center justify-center gap-4 text-center md:items-start md:text-left"
 		>
-			<div class="h-40 w-40 overflow-hidden rounded-full border-4 border-primary">
-				<img src="https://cdn-prod.fiekzz.com/fiekzz/assets/logos/fikri.JPG" alt="fiekzzimage" />
+			<div class="h-40 w-40 overflow-hidden">
+				<img src={heroImage} alt="profile" class="h-full w-full object-cover" />
 			</div>
-			<H1>{HomeData.hero.title}</H1>
-			<Muted>{HomeData.hero.description}</Muted>
+			<H1>{heroName}</H1>
+			<Muted>{data.siteSettings?.heroDescription ?? ''}</Muted>
 			<div class="flex flex-row gap-1">
-				{#each HomeData.hero.links as item}
+				{#each heroLinks as item}
 					<a href={item.href} target="_blank">
 						<Tooltip>
 							<TooltipTrigger>
 								<Button variant="outline" size="icon">
-									<Icon icon={item.icon} className="text-lg" />
+									{#if item.image}
+										<img src={item.image} alt={item.label} class="h-4 w-4 object-contain" />
+									{:else if item.icon}
+										<Icon icon={item.icon} className="text-lg" />
+									{/if}
 								</Button>
 							</TooltipTrigger>
 							<TooltipContent side="bottom">{item.label}</TooltipContent>
