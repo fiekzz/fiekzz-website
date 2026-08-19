@@ -22,8 +22,6 @@ vite.config.ts.timestamp-*
 
 /../generated/prisma
 
-wrangler.toml
-
 # build artifacts
 /dist
 /public/build
