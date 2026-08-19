@@ -13,12 +13,14 @@
 	import TooltipContent from '$lib/components/ui/tooltip/tooltip-content.svelte';
 	import H4 from '$lib/components/ui/typography/h4.svelte';
 	import Large from '$lib/components/ui/typography/large.svelte';
-	import BaseData from '$lib/data/base';
 	import NavBarData from '$lib/data/nav-bar';
 	import { href } from '$lib/utils';
 	import { mode, toggleMode } from 'mode-watcher';
 
+	let { siteSettings }: { siteSettings?: { brandName: string } | null } = $props();
+
 	let isDarkMode = $derived($mode === 'dark');
+	let brandName = $derived(siteSettings?.brandName ?? NavBarData.left.title);
 </script>
 
 <div
@@ -32,10 +34,10 @@
 					<Icon icon={NavBarData.left.icon} />
 				</TooltipTrigger>
 				<TooltipContent side="bottom" class="lg:hidden">
-					{NavBarData.left.title}
+					{brandName}
 				</TooltipContent>
 			</Tooltip>
-			<H4 className="hidden lg:block">{NavBarData.left.title}</H4>
+			<H4 className="hidden lg:block">{brandName}</H4>
 		</a>
 	</div>
 
@@ -71,7 +73,7 @@
 	<!-- sm -->
 	<div class="flex flex-[2] flex-row items-center justify-center sm:hidden">
 		<a href={href('/')}>
-			<Large>{BaseData.fullName}</Large>
+			<Large>{brandName}</Large>
 		</a>
 	</div>
 	<div class="flex flex-row items-center justify-center sm:hidden">

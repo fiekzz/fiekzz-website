@@ -1,9 +1,8 @@
 <script lang="ts">
 	import Assets from '$lib/data/assets';
-	import type { Project } from '$lib/data/types';
+	import type { Asset, Project } from '$lib/data/types';
 	import { computeExactDuration, getMonthAndYear, href } from '$lib/utils';
 	import { ellipsify } from '@riadh-adrani/utils';
-	import { mode } from 'mode-watcher';
 	import ButtonLink from '../common/button-link/button-link.svelte';
 	import SkillBadge from '../common/skill-badge/skill-badge.svelte';
 	import AvatarFallback from '../ui/avatar/avatar-fallback.svelte';
@@ -43,6 +42,10 @@
 	let from = $derived(getMonthAndYear(project.period.from));
 	let to = $derived(getMonthAndYear(project.period.to));
 	let exactDuration = $derived(computeExactDuration(project.period.from, project.period.to));
+
+	function logoUrl(logo: Asset | string): string {
+		return logo as string;
+	}
 </script>
 
 <FancyCard
@@ -55,7 +58,7 @@
 			<AvatarFallback>
 				<img src={Assets.Unknown.light} alt={project.name} />
 			</AvatarFallback>
-			<AvatarImage src={project.logo as string} />
+			<AvatarImage src={logoUrl(project.logo)} />
 		</Avatar>
 		<div class="flex w-full flex-row items-center gap-1 overflow-x-hidden">
 			<CardTitle class="h-auto min-w-0 flex-1 overflow-x-hidden">
@@ -113,7 +116,7 @@
 		<Separator />
 		<div class="flex flex-row flex-wrap items-center gap-2">
 			{#each project.skills as skill (skill.slug)}
-				<SkillBadge id={skill.slug} name={skill.name} imageUrl={skill.logo as string} />
+				<SkillBadge id={skill.slug} name={skill.name} imageUrl={logoUrl(skill.logo)} />
 			{/each}
 		</div>
 	</CardContent>

@@ -1,9 +1,8 @@
 <script lang="ts">
 	import Assets from '$lib/data/assets';
-	import type { Experience } from '$lib/data/types';
+	import type { Asset, Experience } from '$lib/data/types';
 	import { computeExactDuration, getMonthAndYear, href } from '$lib/utils';
 	import { ellipsify } from '@riadh-adrani/utils';
-	import { mode } from 'mode-watcher';
 	import SkillBadge from '../common/skill-badge/skill-badge.svelte';
 	import { Avatar, AvatarFallback } from '../ui/avatar';
 	import AvatarImage from '../ui/avatar/avatar-image.svelte';
@@ -28,6 +27,10 @@
 		{ label: it.location, icon: 'i-carbon-location', tooltip: 'Location' },
 		{ label: it.contract, icon: 'i-carbon-hourglass', tooltip: 'Contract Type' }
 	] as const);
+
+	function logoUrl(logo: Asset | string): string {
+		return logo as string;
+	}
 </script>
 
 <FancyCard color={it.color} href={href(`/experience/${it.slug}`)}>
@@ -36,7 +39,7 @@
 			<AvatarFallback>
 				<img src={Assets.Unknown.light} alt={it.name} />
 			</AvatarFallback>
-			<AvatarImage src={it.logo as string} />
+			<AvatarImage src={logoUrl(it.logo)} />
 		</Avatar>
 		<div class="flex flex-col gap-4">
 			<CardTitle>{it.name}</CardTitle>
@@ -74,7 +77,7 @@
 			<div class="py-2 text-sm text-muted-foreground">{ellipsify(it.shortDescription, 150)}</div>
 			<div class="flex flex-row flex-wrap gap-2">
 				{#each it.skills as skill (skill.slug)}
-					<SkillBadge id={skill.slug} name={skill.name} imageUrl={skill.logo as string} />
+					<SkillBadge id={skill.slug} name={skill.name} imageUrl={logoUrl(skill.logo)} />
 				{/each}
 			</div>
 		</div>

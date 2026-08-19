@@ -93,4 +93,5 @@ export interface Education<S extends string = string> extends Item<S> {
 	subjects: Array<string>;
 	degree: string;
 	cgpa?: string;
+	color: Color;
 }
