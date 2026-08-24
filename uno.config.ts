@@ -10,6 +10,19 @@ export default defineConfig({
 			]
 		}
 	},
+	// socialLinks.icon comes from the database at request time, so these class
+	// names never appear in scanned source files and would otherwise be dropped.
+	safelist: [
+		'i-carbon-logo-linkedin',
+		'i-carbon-logo-x',
+		'i-carbon-logo-github',
+		'i-carbon-email',
+		'i-carbon-logo-facebook',
+		'i-carbon-logo-instagram',
+		'i-carbon-logo-youtube',
+		'i-carbon-logo-discord',
+		'i-carbon-logo-tiktok'
+	],
 	presets: [
 		presetWebFonts({
 			fonts: {

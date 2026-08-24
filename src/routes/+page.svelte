@@ -75,6 +75,8 @@
 										<img src={item.image} alt={item.label} class="h-4 w-4 object-contain" />
 									{:else if item.icon}
 										<Icon icon={item.icon} className="text-lg" />
+									{:else}
+										<Icon icon="i-carbon-link" className="text-lg" />
 									{/if}
 								</Button>
 							</TooltipTrigger>
